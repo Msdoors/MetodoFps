@@ -1,125 +1,319 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Como Ajustar o FPS de Vídeos com Python</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 1rem;
-    }
-    @media (max-width: 640px) {
-      .container {
-        padding: 0.5rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial TikTok FPS - Como Ajustar FPS de Vídeos com Python | Slucss Community</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Aprenda como ajustar FPS de vídeos para TikTok usando Python no Termux. Tutorial completo com script gratuito. Melhore a qualidade dos seus vídeos no TikTok agora!">
+    <meta name="keywords" content="tiktok fps, ajustar fps video, python termux, tiktok video quality, fps video tiktok, como melhorar fps tiktok, video fluido tiktok, termux python, script fps tiktok, tutorial tiktok, edição video tiktok, qualidade video tiktok">
+    <meta name="author" content="Slucss Community">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Portuguese">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Tutorial TikTok FPS - Como Ajustar FPS de Vídeos com Python">
+    <meta property="og:description" content="Aprenda como ajustar FPS de vídeos para TikTok usando Python no Termux. Tutorial completo com script gratuito para melhorar a qualidade dos seus vídeos!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://slucss.com/tiktok-fps-tutorial">
+    <meta property="og:image" content="https://slucss.com/images/tiktok-fps-preview.jpg">
+    <meta property="og:site_name" content="Slucss Community">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tutorial TikTok FPS - Como Ajustar FPS de Vídeos">
+    <meta name="twitter:description" content="Tutorial completo para ajustar FPS de vídeos no TikTok usando Python. Melhore a qualidade dos seus vídeos agora!">
+    <meta name="twitter:image" content="https://slucss.com/images/tiktok-fps-preview.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
-  <div class="container mx-auto bg-white shadow-lg rounded-lg p-6">
-    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Como Usar o Script Python para Ajustar FPS do Vídeo</h1>
+<body>
+    <!-- Discord Banner -->
+    <div class="discord-banner">
+        <div class="container">
+            <div class="banner-content">
+                <div class="banner-text">
+                    <h3>🎮 Junte-se a Slucss Community no Discord!</h3>
+                    <p>Membros online: <span id="memberCount">Carregando...</span></p>
+                </div>
+                <a href="https://discord.gg/slucss-1k-845743754782048266" target="_blank" class="discord-btn">
+                    Entrar no Discord
+                </a>
+            </div>
+        </div>
+    </div>
 
-    <section class="mb-6">
-      <h2 class="text-2xl font-semibold text-gray-700 mb-3">Passo 1: Instalar o Termux</h2>
-      <p class="text-gray-600">Primeiramente, baixe o Termux via F-Droid. O F-Droid é uma loja de aplicativos confiável que oferece versões estáveis do Termux para Android. <strong>Importante:</strong> não baixe o Termux pela Play Store, pois a versão lá está desatualizada. Você pode obter o Termux pelo link do F-Droid:</p>
-      <a href="https://f-droid.org/repo/com.termux_1022.apk" class="text-blue-500 hover:underline" target="_blank">https://f-droid.org/packages/com.termux/</a>
-    </section>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="main-title">Tutorial TikTok FPS</h1>
+            <p class="subtitle">Como Ajustar FPS de Vídeos com Python no Termux</p>
+        </div>
+    </header>
 
-    <section class="mb-6">
-      <h2 class="text-2xl font-semibold text-gray-700 mb-3">Passo 2: Instalar o Python</h2>
-      <p class="text-gray-600">Após instalar o Termux, abra o terminal do Termux e execute o seguinte comando para instalar o Python 3:</p>
-      <pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto"><code>pkg install python</code></pre>
-    </section>
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="container">
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showPage(1)">1. Baixando Termux</button>
+                <button class="nav-btn" onclick="showPage(2)">2. Instalando Python</button>
+                <button class="nav-btn" onclick="showPage(3)">3. Criando Script</button>
+                <button class="nav-btn" onclick="showPage(4)">4. Executando</button>
+                <button class="nav-btn" onclick="showPage(5)">5. Postando TikTok</button>
+            </div>
+        </div>
+    </nav>
 
-    <section class="mb-6">
-      <h2 class="text-2xl font-semibold text-gray-700 mb-3">Passo 3: Criar o Script</h2>
-      <p class="text-gray-600">No Termux, crie o arquivo de script com o seguinte comando:</p>
-      <pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto"><code>nano patch_mp4.py</code></pre>
-      <p class="text-gray-600">Depois, cole o código Python fornecido no script dentro do arquivo e salve pressionando <code>CTRL + X</code>, depois <code>Y</code> para confirmar e <code>Enter</code> para sair.</p>
-    </section>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page 1: Baixando Termux -->
+            <div id="page1" class="page active">
+                <div class="page-header">
+                    <h2>📱 Baixando o Termux</h2>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 20%"></div>
+                    </div>
+                </div>
+                
+                <div class="content-card">
+                    <div class="step-number">1</div>
+                    <h3>Por que usar o F-Droid?</h3>
+                    <p>O Termux da Play Store está <strong>desatualizado</strong> e pode não funcionar corretamente. O F-Droid oferece a versão mais recente e estável.</p>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ IMPORTANTE:</strong> NÃO baixe o Termux pela Play Store!
+                    </div>
+                </div>
 
-    <section class="mb-6">
-      <h2 class="text-2xl font-semibold text-gray-700 mb-3">Passo 4: Preparar o Vídeo</h2>
-      <p class="text-gray-600">Envie o vídeo para o diretório do Termux onde o script foi criado. Você pode usar o comando <code>cp</code> ou mover o arquivo manualmente.</p>
-    </section>
+                <div class="content-card">
+                    <div class="step-number">2</div>
+                    <h3>Baixando o F-Droid</h3>
+                    <p>Primeiro, baixe o F-Droid (loja de aplicativos open source):</p>
+                    <a href="https://f-droid.org/" class="download-btn" target="_blank">
+                        📥 Baixar F-Droid
+                    </a>
+                </div>
 
-    <section class="mb-6">
-      <h2 class="text-2xl font-semibold text-gray-700 mb-3">Passo 5: Rodar o Script</h2>
-      <p class="text-gray-600">Agora, você vai rodar o script para ajustar o FPS do seu vídeo. Antes de rodar, é muito importante calcular o fator de escala. Veja como calcular isso:</p>
-      <h3 class="text-xl font-semibold text-gray-700 mt-4 mb-2">Como Calcular o Fator de Escala</h3>
-      <p class="text-gray-600">Verifique o FPS do seu vídeo original (se você não souber, pode usar um reprodutor de mídia que mostra o FPS, como o VLC). Divida 30 pelo FPS do seu vídeo. O resultado será o valor que você precisa passar como argumento para o script.</p>
-      <p class="text-gray-600 mt-2">Exemplo:</p>
-      <ul class="list-disc pl-6 text-gray-600">
-        <li>Se o seu vídeo tem 60 FPS, então: 30 / 60 = 0.5. Execute o comando:</li>
-        <pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto"><code>python patch_mp4.py input.mp4 output.mp4 0.5</code></pre>
-        <li>Se o seu vídeo tem 90 FPS, então: 30 / 90 = 0.333. Execute o comando:</li>
-        <pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto"><code>python patch_mp4.py input.mp4 output.mp4 0.333</code></pre>
-        <li>Se o seu vídeo tem 120 FPS, então: 30 / 120 = 0.25. Execute o comando:</li>
-        <pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto"><code>python patch_mp4.py input.mp4 output.mp4 0.25</code></pre>
-      </ul>
-      <p class="text-gray-600 mt-2">Recomendo que o arquivo original tenha 120+ FPS para uma melhor fluidez ao postar no TikTok!</p>
-    </section>
+                <div class="content-card">
+                    <div class="step-number">3</div>
+                    <h3>Instalando o Termux</h3>
+                    <p>Após instalar o F-Droid, procure por "Termux" e instale:</p>
+                    <a href="https://f-droid.org/packages/com.termux/" class="download-btn" target="_blank">
+                        📱 Instalar Termux via F-Droid
+                    </a>
+                </div>
 
-    <section class="mb-6">
-      <h2 class="text-2xl font-semibold text-gray-700 mb-3">Passo 6: Aplicar o Patch</h2>
-      <p class="text-gray-600">Quando você rodar o script, ele irá aplicar o patch e ajustar o FPS do seu vídeo. Após o processo ser concluído, o vídeo alterado será salvo como <code>output.mp4</code>.</p>
-    </section>
+                <div class="next-page">
+                    <button onclick="showPage(2)" class="next-btn">
+                        Próximo: Instalando Python →
+                    </button>
+                </div>
+            </div>
 
-    <section class="mb-6">
-      <h2 class="text-2xl font-semibold text-gray-700 mb-3">Postando no TikTok</h2>
-      <p class="text-gray-600"><strong>MUITO IMPORTANTE:</strong></p>
-      <ul class="list-disc pl-6 text-gray-600">
-        <li>Ao postar seu vídeo no TikTok, use o navegador Brave ou Chrome.</li>
-        <li>Carregue o vídeo como privado primeiro e, depois, mude para público.</li>
-        <li>Preferencialmente, faça o upload pelo computador. Se não for possível, use o celular, mas no modo desktop para garantir que o vídeo seja carregado corretamente.</li>
-      </ul>
-      <p class="text-gray-600 mt-2">Agora é só curtir seu vídeo fluido e com a edição feita no Termux!</p>
-    </section>
-  </div>
+            <!-- Page 2: Instalando Python -->
+            <div id="page2" class="page">
+                <div class="page-header">
+                    <h2>🐍 Instalando Python</h2>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 40%"></div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="step-number">1</div>
+                    <h3>Abrindo o Termux</h3>
+                    <p>Abra o aplicativo Termux que você instalou. Você verá um terminal preto.</p>
+                </div>
+
+                <div class="content-card">
+                    <div class="step-number">2</div>
+                    <h3>Atualizando Pacotes</h3>
+                    <p>Digite o comando abaixo para atualizar os pacotes:</p>
+                    <div class="code-block">
+                        <code>pkg update && pkg upgrade</code>
+                        <button onclick="copyCode(this)" class="copy-btn">📋</button>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="step-number">3</div>
+                    <h3>Instalando Python</h3>
+                    <p>Agora instale o Python 3:</p>
+                    <div class="code-block">
+                        <code>pkg install python</code>
+                        <button onclick="copyCode(this)" class="copy-btn">📋</button>
+                    </div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button onclick="showPage(1)" class="prev-btn">← Anterior</button>
+                    <button onclick="showPage(3)" class="next-btn">Próximo →</button>
+                </div>
+            </div>
+
+            <!-- Page 3: Criando Script -->
+            <div id="page3" class="page">
+                <div class="page-header">
+                    <h2>📝 Criando o Script</h2>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 60%"></div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="step-number">1</div>
+                    <h3>Criando o Arquivo</h3>
+                    <p>Crie um novo arquivo Python com o comando:</p>
+                    <div class="code-block">
+                        <code>nano patch_mp4.py</code>
+                        <button onclick="copyCode(this)" class="copy-btn">📋</button>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="step-number">2</div>
+                    <h3>Cole o Script</h3>
+                    <p>Cole o código Python no arquivo (será fornecido separadamente).</p>
+                    
+                    <div class="info-box">
+                        <strong>💡 Dica:</strong> Para colar no Termux, use toque longo na tela e selecione "Paste"
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="step-number">3</div>
+                    <h3>Salvando o Arquivo</h3>
+                    <p>Para salvar no nano:</p>
+                    <ul>
+                        <li>Pressione <kbd>Ctrl + X</kbd></li>
+                        <li>Digite <kbd>Y</kbd> para confirmar</li>
+                        <li>Pressione <kbd>Enter</kbd> para sair</li>
+                    </ul>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button onclick="showPage(2)" class="prev-btn">← Anterior</button>
+                    <button onclick="showPage(4)" class="next-btn">Próximo →</button>
+                </div>
+            </div>
+
+            <!-- Page 4: Executando -->
+            <div id="page4" class="page">
+                <div class="page-header">
+                    <h2>⚡ Executando o Script</h2>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 80%"></div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="step-number">1</div>
+                    <h3>Calculando o Fator de Escala</h3>
+                    <p>Para ajustar o FPS, você precisa calcular: <strong>30 ÷ FPS_ORIGINAL</strong></p>
+                    
+                    <div class="calculator">
+                        <h4>Calculadora de FPS</h4>
+                        <input type="number" id="originalFps" placeholder="FPS original do vídeo" min="1">
+                        <button onclick="calculateFps()" class="calc-btn">Calcular</button>
+                        <div id="result" class="calc-result"></div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="step-number">2</div>
+                    <h3>Exemplos Práticos</h3>
+                    <div class="examples">
+                        <div class="example">
+                            <strong>60 FPS → 30 FPS:</strong>
+                            <div class="code-block">
+                                <code>python patch_mp4.py input.mp4 output.mp4 0.5</code>
+                                <button onclick="copyCode(this)" class="copy-btn">📋</button>
+                            </div>
+                        </div>
+                        <div class="example">
+                            <strong>120 FPS → 30 FPS:</strong>
+                            <div class="code-block">
+                                <code>python patch_mp4.py input.mp4 output.mp4 0.25</code>
+                                <button onclick="copyCode(this)" class="copy-btn">📋</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button onclick="showPage(3)" class="prev-btn">← Anterior</button>
+                    <button onclick="showPage(5)" class="next-btn">Próximo →</button>
+                </div>
+            </div>
+
+            <!-- Page 5: Postando TikTok -->
+            <div id="page5" class="page">
+                <div class="page-header">
+                    <h2>🎬 Postando no TikTok</h2>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="step-number">1</div>
+                    <h3>Navegadores Recomendados</h3>
+                    <p>Use <strong>Brave</strong> ou <strong>Chrome</strong> para melhor compatibilidade.</p>
+                </div>
+
+                <div class="content-card">
+                    <div class="step-number">2</div>
+                    <h3>Processo de Upload</h3>
+                    <ol>
+                        <li>Carregue o vídeo como <strong>PRIVADO</strong> primeiro</li>
+                        <li>Aguarde o processamento completo</li>
+                        <li>Depois mude para <strong>PÚBLICO</strong></li>
+                    </ol>
+                </div>
+
+                <div class="content-card">
+                    <div class="step-number">3</div>
+                    <h3>Dicas Importantes</h3>
+                    <div class="tips">
+                        <div class="tip">
+                            <strong>🖥️ Computador:</strong> Sempre prefira fazer upload pelo PC
+                        </div>
+                        <div class="tip">
+                            <strong>📱 Celular:</strong> Use modo desktop no navegador
+                        </div>
+                        <div class="tip">
+                            <strong>🎯 FPS Ideal:</strong> Vídeos de 120+ FPS originais ficam mais fluidos
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-message">
+                    <h3>🎉 Parabéns!</h3>
+                    <p>Agora você sabe como ajustar FPS de vídeos para o TikTok usando Python!</p>
+                    <button onclick="showPage(1)" class="restart-btn">🔄 Recomeçar Tutorial</button>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button onclick="showPage(4)" class="prev-btn">← Anterior</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Slucss Community. Todos os direitos reservados.</p>
+            <p>Tutorial TikTok FPS | Python | Termux | Qualidade de Vídeo</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
